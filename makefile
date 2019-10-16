@@ -1,7 +1,7 @@
 .PHONY: debug, clean
 
-debug: src/main.cpp src/jpeg.h src/jpeg.cpp  src/pgm.cpp src/pgm.h
-	g++ src/*.cpp -ljpeg -o bin/release/main
+debug: src/main.cpp
+	g++ src/main.cpp src/common/*.cpp src/formats/*.cpp src/algorithms/*.cpp -ljpeg -o bin/release/main
 
 clean:
-	rm bin/release/main/*.o
+	rm bin/release/*
