@@ -104,6 +104,12 @@ namespace image
         reset_headers();
     }
 
+    void Image::equalize_contrast()
+    {
+        data = algos::equalize_contrast(data);
+        reset_headers();
+    }
+
     std::map<image::Pixel, unsigned int> Image::get_histogram()
     {
         std::map<image::Pixel, unsigned int> hist = algos::get_histogram(data);

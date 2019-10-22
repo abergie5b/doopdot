@@ -57,6 +57,34 @@ namespace algos {
         return hist;
     }
 
+    image::BitMap equalize_contrast(image::BitMap data)
+    {
+        std::map<image::Pixel, unsigned int> histogram = get_histogram(data);
+        size_t height = data.size();
+        size_t width = data[0].size();
+        size_t total_pixels = height * width;
+        size_t cumsum = 0;
+        std::map<image::Pixel, double> cumulative_distribution;
+        for (auto const& it: histogram)
+        {
+            cumsum += it.second;
+            cumulative_distribution[it.first] = (float)cumsum / (float)total_pixels;
+        }
+        image::BitMap data_out;
+        for (int y=0; y<height; y++)
+        {
+            std::vector<image::Pixel> row;
+            for (int x=0; x<width; x++)
+            {
+                uint8_t pixel = data[y][x];
+                uint8_t cdf = 255 * cumulative_distribution[pixel];
+                row.push_back(cdf);
+            }
+            data_out.push_back(row);
+        }
+        return data_out;
+    };
+
     void display(std::string title, std::map<std::string, unsigned int, sorted_by_keys> hist, int max_grayscale)
     {
         size_t max_count = 0;

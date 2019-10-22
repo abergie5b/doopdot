@@ -26,6 +26,7 @@ namespace algos {
     std::map<image::Pixel, unsigned int> get_histogram(image::BitMap data);
     void display(std::string title, std::map<std::string, unsigned int, sorted_by_keys> hist, int max_grayscale);
     std::map<std::string, unsigned int, sorted_by_keys> groupby(std::map<image::Pixel, unsigned int> hist, int magnitude);
+    image::BitMap equalize_contrast(image::BitMap img);
 
 } // algos
 

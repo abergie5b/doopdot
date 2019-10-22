@@ -24,6 +24,7 @@ public:
     void resize(size_t width, size_t height, std::string method);
     void negative();
     void rotate90();
+    void equalize_contrast();
     void reset_headers();
     virtual ~Image();
 private:

@@ -1,5 +1,6 @@
 #include "algorithms/resize.h"
 #include "algorithms/transform.h"
+#include "algorithms/convolution.h"
 #include "algorithms/histogram.h"
 #include "common/image.h"
 #include "common/types.h"
@@ -70,7 +71,39 @@ void test_image(int argc, char* argv[])
     else if (action == "rotate90")
     {
         img.rotate90();
-        img.writeas("src/data/out_rotate.ascci.pgm", "pgm");
+        img.writeas("src/data/out_rotate.ascii.pgm", "pgm");
+    }
+
+    else if (action == "contrasteq")
+    {
+        img.equalize_contrast();
+        img.writeas("src/data/out_equalize_contrast.ascii.pgm", "pgm");
+    }
+
+    else if (action == "convolve")
+    {
+        // Identity 
+        //image::Kernel kernel = {
+        //    {0, 0, 0},
+        //    {0, 1, 0},
+        //    {0, 0, 0}
+        //};
+        
+        // Sharpening
+        //image::Kernel kernel = {
+        //    {0, -1, 0},
+        //    {-1, 5, -1},
+        //    {0, -1, 0}
+        //};
+        
+        // Edge Detector
+        image::Kernel kernel = {
+            {-1.0, -1.0, -1.0},
+            {-1.0, 8.0, -1.0},
+            {-1.0, -1.0, -1.0}
+        };
+        image::BitMap img_out8 = algos::convolve(img.data, kernel);
+        pgm::write(img_out8, "src/data/output_convolution.ascii.pgm");
     }
 
     else if (action == "all")
@@ -109,6 +142,17 @@ void test_image(int argc, char* argv[])
 
         image::BitMap img_out6 = algos::rotate90(orig_img);
         pgm::write(img_out6, "src/data/output_rotate90.ascii.pgm");
+
+        image::BitMap img_out7 = algos::equalize_contrast(orig_img);
+        pgm::write(img_out7, "src/data/output_equalize_contrast.ascii.pgm");
+
+        image::Kernel kernel = {
+            {0, 0, 0},
+            {0, 1, 0},
+            {0, 0, 0}
+        };
+        image::BitMap img_out8 = algos::convolve(orig_img, kernel);
+        pgm::write(img_out8, "src/data/output_convolution.ascii.pgm");
 
         test_ppm();
     }

@@ -138,6 +138,7 @@ namespace pgm {
                 // error
             }
             _headers.max_grayscale = std::stoi(header_values[2]);
+            _headers.pixel_size = 8;
             return _headers;
         }
     }

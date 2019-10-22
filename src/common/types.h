@@ -27,6 +27,9 @@ namespace image
     // For greyscale images
     typedef std::vector<std::vector<Pixel>> BitMap;
 
+    // Convolution Kernel
+    typedef std::vector<std::vector<double>> Kernel;
+
     // For RGB and other multi-channel images
     typedef std::vector<std::vector<std::vector<Pixel>>> ColorBitMap;
 
