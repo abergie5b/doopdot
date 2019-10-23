@@ -2,9 +2,12 @@
 #include "../algorithms/resize.h"
 #include "../algorithms/transform.h"
 #include "../algorithms/histogram.h"
+#include "../algorithms/convolution.h"
+#include "../algorithms/filter.h"
 #include "../formats/pgm.h"
 #include "../formats/jpeg.h"
 
+#include <stdexcept>
 #include <iostream>
 #include <algorithm>
 
@@ -52,9 +55,14 @@ namespace image
             headers = pgm::get_headers(_filename);
             data = pgm::get_data(_filename, headers);
         }
+        else if (image_type == ImageType::PPM)
+        {
+            headers = pgm::get_headers(_filename);
+            rgb_data = pgm::get_ppm_data(_filename, headers);
+        }
         else
         {
-            // error
+            throw std::runtime_error("i don't recognize this format");
         }
     }
 
@@ -70,9 +78,13 @@ namespace image
         {
             return pgm::write(headers, data, path);
         }
+        else if (_image_type == ImageType::PPM)
+        {
+            return pgm::write_ppm(headers, rgb_data, path);
+        }
         else
         {
-            // error
+            throw std::runtime_error("i don't recognize this format");
         }
     }
 
@@ -86,15 +98,59 @@ namespace image
         {
             headers = pgm::create_headers(data);
         }
+        else if (image_type == ImageType::PPM)
+        {
+            headers = pgm::create_headers(rgb_data);
+        }
         else
         {
-            // error
+            throw std::runtime_error("i don't recognize this format");
         }
+    }
+
+    void Image::filter(std::string type)
+    {
+    }
+
+    void Image::convolve(image::Kernel kernel)
+    {
+        if (image_type == ImageType::PPM) //grayscale
+            rgb_data = algos::convolve_rgb(rgb_data, kernel);
+        else
+            data = algos::convolve(data, kernel);
+        reset_headers();
     }
 
     void Image::rotate90()
     {
         data = algos::rotate90(data);
+        reset_headers();
+    }
+
+    void Image::sobel()
+    {
+        if (image_type == ImageType::PPM)
+        {
+            rgb_data = algos::sobel(rgb_data);
+        }
+        else
+        {
+            data = algos::sobel(data);
+        }
+        reset_headers();
+    }
+
+
+    void Image::prewitt()
+    {
+        if (image_type == ImageType::PPM)
+        {
+            rgb_data = algos::prewitt_rgb(rgb_data);
+        }
+        else
+        {
+            data = algos::prewitt(data);
+        }
         reset_headers();
     }
 

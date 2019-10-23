@@ -17,6 +17,7 @@ public:
     ImageType image_type;
     struct Headers headers;
     image::BitMap data;
+    image::ColorBitMap rgb_data;
     Image(std::string, std::string type);
     void print_headers();
     int writeas(std::string path, std::string type);
@@ -25,6 +26,10 @@ public:
     void negative();
     void rotate90();
     void equalize_contrast();
+    void convolve(image::Kernel kernel);
+    void filter(std::string type);
+    void sobel();
+    void prewitt();
     void reset_headers();
     virtual ~Image();
 private:

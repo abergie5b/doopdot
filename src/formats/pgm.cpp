@@ -8,6 +8,39 @@
 #include <sstream>
 
 namespace pgm {
+    image::Headers create_headers(image::ColorBitMap data)
+    {
+        struct image::Headers headers;
+        headers.version= "P3";
+        headers.pixel_size = 8;
+        if (data.size() > 0)
+        {
+            headers.width = data[0].size();
+            headers.height = data.size();
+        }
+        else
+        {
+            std::stringstream msg;
+            msg << "No data found for write operation, exiting";
+            throw std::length_error(msg.str());
+        }
+        size_t channels = 3;
+
+        unsigned short max_grayscale = 0;
+        for (int y=0; y<headers.height; y++)
+        {
+            for (int x=0; x<headers.width; x++)
+            {
+                for (int c=0; c<channels; c++)
+                {
+                    if (data[y][x][c] > max_grayscale)
+                        max_grayscale = data[y][x][c];
+                }
+            }
+        }
+        headers.max_grayscale = max_grayscale;
+        return headers;
+    }
 
     image::Headers create_headers(image::BitMap data)
     {
@@ -135,7 +168,7 @@ namespace pgm {
             }
             else
             {
-                // error
+                throw std::length_error("could not read width/height from file");
             }
             _headers.max_grayscale = std::stoi(header_values[2]);
             _headers.pixel_size = 8;
@@ -227,7 +260,7 @@ namespace pgm {
             char* token;
             token = strtok(const_cast<char*>(line.c_str()), delimiter);
 
-            for (int y=0; y<headers.height*headers.width*(channels-1); y++)
+            for (int y=0; y<headers.height*headers.width*(channels); y++)
             {
                 if (token)
                 {
@@ -259,7 +292,7 @@ namespace pgm {
             for (int x=0; x<headers.width; x++)
             {
                 std::vector<image::Pixel> channel;
-                for (int c=0; c<channels-1; c++)
+                for (int c=0; c<channels; c++)
                 {
                     channel.push_back(_data[i]);
                     i++;
@@ -302,7 +335,7 @@ namespace pgm {
             {
                 for (int x=0; x<headers.width; x++)
                 {
-                    for (int c=0; c<channels-1; c++)
+                    for (int c=0; c<channels; c++)
                     {
                         outfile << (short)data[y][x][c];
                         outfile << "  ";

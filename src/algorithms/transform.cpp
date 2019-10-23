@@ -7,14 +7,13 @@ namespace algos {
         size_t height = data.size();
         size_t width = data[0].size();
         size_t channels = 3; // RGB
-        channel--;
         
         image::ColorBitMap _data = data;
         for (int y=0; y<height; y++)
         {
             for (int x=0; x<width; x++)
             {
-                for (int c=0; c<channels-1; c++)
+                for (int c=0; c<channels; c++)
                 {
                     if (channel == c)
                         _data[y][x][c] = 255 - _data[y][x][c];

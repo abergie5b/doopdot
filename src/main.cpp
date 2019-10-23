@@ -2,6 +2,7 @@
 #include "algorithms/transform.h"
 #include "algorithms/convolution.h"
 #include "algorithms/histogram.h"
+#include "algorithms/filter.h"
 #include "common/image.h"
 #include "common/types.h"
 #include "formats/pgm.h"
@@ -10,9 +11,9 @@
 
 void test_ppm()
 {
-    image::Headers headers = pgm::get_headers("src/data/snail.ascii.ppm");
-    image::ColorBitMap data = pgm::get_ppm_data("src/data/snail.ascii.ppm", headers);
-    pgm::write_ppm(headers, data, "src/data/output.snail.ascii.ppm");
+    image::Image img("src/data/snail.ascii.ppm", "ppm");
+    img.print_headers();
+    img.writeas("src/data/output_snail.ascii.ppm", "ppm");
 }
 
 void test_image(int argc, char* argv[])
@@ -80,6 +81,35 @@ void test_image(int argc, char* argv[])
         img.writeas("src/data/out_equalize_contrast.ascii.pgm", "pgm");
     }
 
+    else if (action == "ppm")
+    {
+        test_ppm();
+    }
+
+    else if (action == "sobel")
+    {
+        img.sobel();
+        img.writeas("src/data/output_sobel.ascii.pgm", "pgm");
+    }
+
+    else if (action == "sobel_rgb")
+    {
+        img.sobel();
+        img.writeas("src/data/output_sobel_rgb.ascii.ppm", "ppm");
+    }
+
+    else if (action == "prewitt")
+    {
+        img.prewitt();
+        img.writeas("src/data/output_prewitt.ascii.pgm", "pgm");
+    }
+
+    else if (action == "prewitt_rgb")
+    {
+        img.prewitt();
+        img.writeas("src/data/output_prewitt_rgb.ascii.ppm", "ppm");
+    }
+
     else if (action == "convolve")
     {
         // Identity 
@@ -90,20 +120,35 @@ void test_image(int argc, char* argv[])
         //};
         
         // Sharpening
-        //image::Kernel kernel = {
-        //    {0, -1, 0},
-        //    {-1, 5, -1},
-        //    {0, -1, 0}
-        //};
+        image::Kernel kernel = {
+            {0, -1, 0},
+            {-1, 5, -1},
+            {0, -1, 0}
+        };
         
+        // Edge Detector
+        //image::Kernel kernel = {
+        //    {-1.0, -1.0, -1.0},
+        //    {-1.0, 8.0, -1.0},
+        //    {-1.0, -1.0, -1.0}
+        //};
+        //image::Kernel kernel = algos::get_gaussian_kernel(3);
+        img.convolve(kernel);
+        pgm::write(img.data, "src/data/output_convolution.ascii.pgm");
+    }
+
+    else if (action == "convolve_rgb")
+    {
         // Edge Detector
         image::Kernel kernel = {
             {-1.0, -1.0, -1.0},
             {-1.0, 8.0, -1.0},
             {-1.0, -1.0, -1.0}
         };
-        image::BitMap img_out8 = algos::convolve(img.data, kernel);
-        pgm::write(img_out8, "src/data/output_convolution.ascii.pgm");
+        //image::Kernel kernel = algos::get_gaussian_kernel(3);
+        image::Image img2("src/data/snail.ascii.ppm", "ppm");
+        img2.convolve(kernel);
+        img2.writeas("src/data/output_convolution_rgb.ascii.ppm", "ppm");
     }
 
     else if (action == "all")
@@ -140,12 +185,15 @@ void test_image(int argc, char* argv[])
         //for (auto const& it : grouped)
         //    std::cout << it.first << " => " << it.second << '\n';
 
+        // Rotate 90 degrees
         image::BitMap img_out6 = algos::rotate90(orig_img);
         pgm::write(img_out6, "src/data/output_rotate90.ascii.pgm");
 
+        // Contrast Equalization
         image::BitMap img_out7 = algos::equalize_contrast(orig_img);
         pgm::write(img_out7, "src/data/output_equalize_contrast.ascii.pgm");
 
+        // Convolutions
         image::Kernel kernel = {
             {0, 0, 0},
             {0, 1, 0},
@@ -154,8 +202,12 @@ void test_image(int argc, char* argv[])
         image::BitMap img_out8 = algos::convolve(orig_img, kernel);
         pgm::write(img_out8, "src/data/output_convolution.ascii.pgm");
 
+        image::BitMap img_out9 = algos::sobel(orig_img);
+        pgm::write(img_out9, "src/data/output_sobel.ascii.pgm");
+
         test_ppm();
     }
+
 }
 
 int main(int argc, char* argv[])

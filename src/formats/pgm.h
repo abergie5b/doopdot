@@ -10,6 +10,7 @@ namespace pgm {
 
     image::Headers get_headers(std::string);
     image::Headers create_headers(image::BitMap data);
+    image::Headers create_headers(image::ColorBitMap data);
 
     image::BitMap get_data(std::string filename, image::Headers headers);
     image::ColorBitMap get_ppm_data(std::string filename, image::Headers headers);
