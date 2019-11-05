@@ -30,6 +30,7 @@ public:
     void filter(std::string type);
     void sobel();
     void prewitt();
+    void gaussian_smoothing();
     void reset_headers();
     virtual ~Image();
 private:

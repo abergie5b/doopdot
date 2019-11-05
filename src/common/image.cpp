@@ -71,45 +71,38 @@ namespace image
         std::transform(type.begin(), type.end(), type.begin(), ::toupper);
         ImageType _image_type = ImageTypes[type];
         if (_image_type == ImageType::JPEG)
-        {
             return jpeg::save(headers, data, path);
-        }
         else if (_image_type == ImageType::PGM) // PGM
-        {
             return pgm::write(headers, data, path);
-        }
         else if (_image_type == ImageType::PPM)
-        {
             return pgm::write_ppm(headers, rgb_data, path);
-        }
         else
-        {
             throw std::runtime_error("i don't recognize this format");
-        }
     }
 
     void Image::reset_headers()
     {
         if (image_type == ImageType::JPEG)
-        {
             headers = jpeg::create_headers(filename);
-        }
         else if (image_type == ImageType::PGM)
-        {
             headers = pgm::create_headers(data);
-        }
         else if (image_type == ImageType::PPM)
-        {
             headers = pgm::create_headers(rgb_data);
-        }
         else
-        {
-            throw std::runtime_error("i don't recognize this format");
-        }
+            throw std::runtime_error("Unrecognized file format");
     }
 
-    void Image::filter(std::string type)
+    void Image::filter(std::string type) // default to 3x3
     {
+        if (type == "median")
+            data = algos::median_filter(data, 3); 
+        else if (type == "max")
+            data = algos::maximum_filter(data, 3);
+        else if (type == "min")
+            data = algos::minimum_filter(data, 3);
+        else
+            std::cout << "Unsupported filter type: " << type << std::endl;
+        reset_headers();
     }
 
     void Image::convolve(image::Kernel kernel)
@@ -126,17 +119,20 @@ namespace image
         data = algos::rotate90(data);
         reset_headers();
     }
+    
+    void Image::gaussian_smoothing()
+    {
+        image::Kernel kernel = algos::get_gaussian_kernel(3); // default to 3x3
+        data = algos::convolve(data, kernel);
+        reset_headers();
+    }
 
     void Image::sobel()
     {
         if (image_type == ImageType::PPM)
-        {
             rgb_data = algos::sobel(rgb_data);
-        }
         else
-        {
             data = algos::sobel(data);
-        }
         reset_headers();
     }
 
@@ -144,13 +140,9 @@ namespace image
     void Image::prewitt()
     {
         if (image_type == ImageType::PPM)
-        {
             rgb_data = algos::prewitt_rgb(rgb_data);
-        }
         else
-        {
             data = algos::prewitt(data);
-        }
         reset_headers();
     }
 
