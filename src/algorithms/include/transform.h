@@ -10,6 +10,7 @@ namespace algos {
     image::BitMap negative(image::BitMap img);
 
     image::ColorBitMap invert_channel(int channel, image::ColorBitMap data);
+    image::BitMap convert_to_grayscale(image::ColorBitMap data);
 
 } // algos
 

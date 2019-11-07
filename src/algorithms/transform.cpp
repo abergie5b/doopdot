@@ -2,6 +2,32 @@
 
 namespace algos {
 
+    image::BitMap convert_to_grayscale(image::ColorBitMap data)
+    {
+        size_t height = data.size();
+        size_t width = data[0].size();
+        size_t channels = 3; // RGB
+
+        image::BitMap _data;
+        for (int y=0; y<height; y++)
+        {
+            std::vector<image::Pixel> row;
+            for (int x=0; x<width; x++)
+            {
+                size_t sum = 0;
+                for (int c=0; c<channels; c++)
+                {
+                    sum += data[y][x][c];
+                }
+                float average = (float)sum / channels;
+                average = average > 255 ? 255 : average;
+                row.push_back(average);
+            }
+            _data.push_back(row);
+        }
+        return _data;
+    }
+
     image::ColorBitMap invert_channel(int channel, image::ColorBitMap data)
     {
         size_t height = data.size();

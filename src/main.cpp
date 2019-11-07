@@ -31,6 +31,7 @@ struct args
     image::Kernel kernel;
     bool prewitt = 0;
     bool sobel = 0;
+    bool to_gray = 0;
     bool verbose = 0;
 } args;
 
@@ -51,7 +52,6 @@ struct args parse_args(int argc, char* argv[])
 
     arguments.filename = argv[1];
     int idx = arguments.filename.rfind('.');
-
     if(idx == std::string::npos)
     {
         std::cout << "Unrecognized file extension";
@@ -121,6 +121,10 @@ struct args parse_args(int argc, char* argv[])
             else if (arg == "sobel") // could require threshold
             {
                 arguments.sobel = true;
+            }
+            else if (arg == "to_gray")
+            {
+                arguments.to_gray = true;
             }
         }
     }
@@ -211,6 +215,11 @@ int main(int argc, char* argv[])
         img.convolve(kernel);
     }
 
+    if (arguments.to_gray)
+    {
+        img.to_grayscale();
+    }
+
     if (arguments.write)
     {
         if (arguments.write_path == "")
@@ -220,7 +229,19 @@ int main(int argc, char* argv[])
         }
         else
         {
-            write_image(img, arguments.write_path, arguments.output_format);
+            std::string filetype;
+            int idx = arguments.write_path.rfind('.');
+            if(idx == std::string::npos)
+            {
+                std::cout << "Unrecognized write file extension";
+                std::cout << std::endl;
+                filetype = arguments.filetype;
+            }
+            else
+            {
+                filetype = arguments.write_path.substr(idx+1);
+            }
+            write_image(img, arguments.write_path, filetype);
         }
     }
 

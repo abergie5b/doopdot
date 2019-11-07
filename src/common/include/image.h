@@ -13,15 +13,22 @@ namespace image
 class Image
 {
 public:
+    // 
     std::string filename;
     ImageType image_type;
+
+    // Headers
     struct Headers headers;
+    void print_headers();
+
+    // Pixel Data
     image::BitMap data;
     image::ColorBitMap rgb_data;
+
+    // Constructor
     Image(std::string, std::string type);
-    void print_headers();
-    int writeas(std::string path, std::string type);
-    std::map<image::Pixel, unsigned int> get_histogram();
+
+    // Image Manipulation
     void resize(size_t width, size_t height, std::string method);
     void negative();
     void rotate90();
@@ -31,9 +38,24 @@ public:
     void sobel();
     void prewitt();
     void gaussian_smoothing();
-    void reset_headers();
+    void to_grayscale();
+
+    // Meta
+    std::map<image::Pixel, unsigned int> get_histogram();
+
+    // Save
+    int writeas(std::string path, std::string type);
+    
+    // Destroy
     virtual ~Image();
 private:
+    //
+    bool is_rgb;
+    
+    // Headers
+    void reset_headers();
+
 };
+
 } // image
 
