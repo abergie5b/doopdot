@@ -1,5 +1,5 @@
-#include "filter.h"
-#include "convolution.h"
+#include "include/filter.h"
+#include "include/convolution.h"
 
 #include <algorithm>
 

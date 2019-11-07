@@ -1,11 +1,12 @@
-#include "algorithms/resize.h"
-#include "algorithms/transform.h"
-#include "algorithms/convolution.h"
-#include "algorithms/histogram.h"
-#include "algorithms/filter.h"
-#include "common/image.h"
-#include "common/types.h"
-#include "formats/pgm.h"
+#include "algorithms/include/resize.h"
+#include "algorithms/include/transform.h"
+#include "algorithms/include/convolution.h"
+#include "algorithms/include/histogram.h"
+#include "algorithms/include/filter.h"
+
+#include "common/include/image.h"
+#include "common/include/types.h"
+#include "common/include/pgm.h"
 
 #include <iostream>
 
@@ -123,7 +124,6 @@ struct args parse_args(int argc, char* argv[])
             }
         }
     }
-    std::cout << arguments.filename << std::endl;
     return arguments;
 }
 

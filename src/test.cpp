@@ -210,10 +210,3 @@ void test_image(int argc, char* argv[])
 
 }
 
-int main(int argc, char* argv[])
-{
-    test_image(argc, argv);
-    //test_ppm();
-    return 0;
-}
-

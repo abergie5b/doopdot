@@ -1,2 +1,8 @@
-bin
 *tags*
+*doopdot*
+*.swp
+*.swo
+
+bin
+data
+build

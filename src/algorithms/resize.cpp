@@ -1,4 +1,5 @@
-#include "resize.h"
+#include "include/resize.h"
+
 #include <math.h>
 #include <iostream>
 

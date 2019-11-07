@@ -1,4 +1,4 @@
-#include "histogram.h"
+#include "include/histogram.h"
 
 #include <iostream>
 #include <string>

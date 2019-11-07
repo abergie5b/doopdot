@@ -1,11 +1,11 @@
-#include "image.h"
-#include "../algorithms/resize.h"
-#include "../algorithms/transform.h"
-#include "../algorithms/histogram.h"
-#include "../algorithms/convolution.h"
-#include "../algorithms/filter.h"
-#include "../formats/pgm.h"
-#include "../formats/jpeg.h"
+#include "include/image.h"
+#include "include/pgm.h"
+#include "include/jpeg.h"
+#include "../algorithms/include/resize.h"
+#include "../algorithms/include/transform.h"
+#include "../algorithms/include/histogram.h"
+#include "../algorithms/include/convolution.h"
+#include "../algorithms/include/filter.h"
 
 #include <stdexcept>
 #include <iostream>
