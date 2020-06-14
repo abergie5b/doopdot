@@ -24,7 +24,7 @@ namespace image
     {
         std::cout << "Version: " << headers.version << std::endl;
         if (headers.comments.size() > 0)
-        for (int i=0; i<headers.comments.size(); i++)
+        for (size_t i=0; i<headers.comments.size(); i++)
         {
             std::cout << "Comments: " << headers.comments[i] << std::endl;
         }

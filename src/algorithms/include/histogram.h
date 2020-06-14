@@ -16,9 +16,10 @@ namespace algos {
         // TODO
         bool operator()(std::string a, std::string b) const
         {
-            std::string token = strtok(const_cast<char*>(a.c_str()), "-");
+            char* context = nullptr;
+            std::string token = strtok_s(const_cast<char*>(a.c_str()), "-", &context);
             unsigned int aval = std::stoi(token, NULL, 10);
-            token = strtok(const_cast<char*>(b.c_str()), "-");
+            token = strtok_s(const_cast<char*>(b.c_str()), "-", &context);
             unsigned int bval = std::stoi(token, NULL, 10);
             return aval < bval;
         }

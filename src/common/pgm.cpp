@@ -1,5 +1,6 @@
 #include "include/pgm.h"
 
+#include <assert.h>
 #include <fstream>
 #include <string.h>
 #include <iostream>
@@ -28,11 +29,11 @@ namespace pgm {
         size_t channels = 3;
 
         unsigned short max_grayscale = 0;
-        for (int y=0; y<headers.height; y++)
+        for (size_t y=0; y<headers.height; y++)
         {
-            for (int x=0; x<headers.width; x++)
+            for (size_t x=0; x<headers.width; x++)
             {
-                for (int c=0; c<channels; c++)
+                for (size_t c=0; c<channels; c++)
                 {
                     if (data[y][x][c] > max_grayscale)
                         max_grayscale = data[y][x][c];
@@ -61,9 +62,9 @@ namespace pgm {
         }
 
         unsigned short max_grayscale = 0;
-        for (int y=0; y<headers.height; y++)
+        for (size_t y=0; y<headers.height; y++)
         {
-            for (int x=0; x<headers.width; x++)
+            for (size_t x=0; x<headers.width; x++)
             {
                 if (data[y][x] > max_grayscale)
                     max_grayscale = data[y][x];
@@ -88,7 +89,7 @@ namespace pgm {
             outfile << std::endl;
             if (headers.comments.size() > 0)
             {
-                for (int i=0; i<headers.comments.size(); i++)
+                for (size_t i=0; i<headers.comments.size(); i++)
                 {
                     outfile << headers.comments[i];
                     outfile << std::endl;
@@ -105,9 +106,9 @@ namespace pgm {
             std::cout << data[0].size() << "/" << data.size() << std::endl;
 
             size_t counter = 0;
-            for (int y=0; y<headers.height; y++)
+            for (size_t y=0; y<headers.height; y++)
             {
-                for (int x=0; x<headers.width; x++)
+                for (size_t x=0; x<headers.width; x++)
                 {
                     outfile << (short)data[y][x];
                     outfile << "  ";
@@ -122,7 +123,12 @@ namespace pgm {
             outfile.close();
             struct stat s;
             if (stat(path.c_str(), &s) == -1)
-                throw std::runtime_error(std::strerror(errno));
+            {
+                const int size = 64;
+                char buffer [size];
+                errno_t err = strerror_s(buffer, size, errno);
+                throw std::runtime_error("error parsing string");
+            }
             std::cout << "Wrote " << s.st_size << " bytes to " << path << std::endl;
             return s.st_size;
         }
@@ -160,11 +166,12 @@ namespace pgm {
             _headers.version = header_values[0];       // PGM Version
             dimensions_string = header_values[1];          // Width  Height
              
-            char* c = strtok(const_cast<char*>(dimensions_string.c_str()), delimiter);
+            char* context = nullptr;
+            char* c = strtok_s(const_cast<char*>(dimensions_string.c_str()), delimiter, &context);
             if (c != NULL)
             {
                 _headers.width = std::stoi(c);
-                c = strtok(NULL, delimiter);
+                c = strtok_s(NULL, delimiter, &context);
                 _headers.height = std::stoi(c);
             }
             else
@@ -175,11 +182,18 @@ namespace pgm {
             _headers.pixel_size = 8;
             return _headers;
         }
+        else
+        {
+            printf("unable to open file %s", filename.c_str());
+			struct image::Headers nothing;
+			return nothing;
+        }
     }
 
     image::BitMap get_data(std::string _filename, image::Headers headers)
     {
         std::ifstream infile(_filename);
+
 
         const char* delimiter = " ";
         std::vector<std::string> header_values;
@@ -197,15 +211,16 @@ namespace pgm {
             std::getline(infile, line);
 
             char* token;
-            token = strtok(const_cast<char*>(line.c_str()), delimiter);
+            char* context = nullptr;
+            token = strtok_s(const_cast<char*>(line.c_str()), delimiter, &context);
 
-            for (int y=0; y<headers.height*headers.width; y++)
+            for (size_t y=0; y<headers.height*headers.width; y++)
             {
                 if (token)
                 {
                     uint8_t value = std::stoi(token, NULL, 10);
                     _data.push_back(value);
-                    token = strtok(NULL, delimiter);
+                    token = strtok_s(NULL, delimiter, &context);
                 }
                 else
                 {
@@ -214,10 +229,10 @@ namespace pgm {
                     {
                         break;
                     }
-                    token = strtok(const_cast<char*>(line.c_str()), delimiter);
+                    token = strtok_s(const_cast<char*>(line.c_str()), delimiter, &context);
                     uint8_t value = std::stoi(token, NULL, 10);
                     _data.push_back(value);
-                    token = strtok(NULL, delimiter);
+                    token = strtok_s(NULL, delimiter, &context);
                 }
             }
             infile.close();
@@ -225,10 +240,10 @@ namespace pgm {
 
         size_t i = 0;
         image::BitMap __data;
-        for (int y=0; y<headers.height; y++)
+        for (size_t y=0; y<headers.height; y++)
         {
             std::vector<image::Pixel> row;
-            for (int x=0; x<headers.width; x++)
+            for (size_t x=0; x<headers.width; x++)
             {
                 row.push_back(_data[i]);
                 i++;
@@ -259,15 +274,16 @@ namespace pgm {
             std::getline(infile, line);
 
             char* token;
-            token = strtok(const_cast<char*>(line.c_str()), delimiter);
+            char* context = nullptr;
+            token = strtok_s(const_cast<char*>(line.c_str()), delimiter, &context);
 
-            for (int y=0; y<headers.height*headers.width*(channels); y++)
+            for (size_t y=0; y<headers.height*headers.width*(channels); y++)
             {
                 if (token)
                 {
                     uint8_t value = std::stoi(token, NULL, 10);
                     _data.push_back(value);
-                    token = strtok(NULL, delimiter);
+                    token = strtok_s(NULL, delimiter, &context);
                 }
                 else
                 {
@@ -276,10 +292,10 @@ namespace pgm {
                     {
                         break;
                     }
-                    token = strtok(const_cast<char*>(line.c_str()), delimiter);
+                    token = strtok_s(const_cast<char*>(line.c_str()), delimiter, &context);
                     uint8_t value = std::stoi(token, NULL, 10);
                     _data.push_back(value);
-                    token = strtok(NULL, delimiter);
+                    token = strtok_s(NULL, delimiter, &context);
                 }
             }
             infile.close();
@@ -287,13 +303,13 @@ namespace pgm {
 
         size_t i = 0;
         image::ColorBitMap __data;
-        for (int y=0; y<headers.height; y++)
+        for (size_t y=0; y<headers.height; y++)
         {
             image::BitMap row;
-            for (int x=0; x<headers.width; x++)
+            for (size_t x=0; x<headers.width; x++)
             {
                 std::vector<image::Pixel> channel;
-                for (int c=0; c<channels; c++)
+                for (size_t c=0; c<channels; c++)
                 {
                     channel.push_back(_data[i]);
                     i++;
@@ -314,7 +330,7 @@ namespace pgm {
             outfile << std::endl;
             if (headers.comments.size() > 0)
             {
-                for (int i=0; i<headers.comments.size(); i++)
+                for (size_t i=0; i<headers.comments.size(); i++)
                 {
                     outfile << headers.comments[i];
                     outfile << std::endl;
@@ -332,11 +348,11 @@ namespace pgm {
 
             size_t channels = 3; // RGB
             size_t counter = 0;
-            for (int y=0; y<headers.height; y++)
+            for (size_t y=0; y<headers.height; y++)
             {
-                for (int x=0; x<headers.width; x++)
+                for (size_t x=0; x<headers.width; x++)
                 {
-                    for (int c=0; c<channels; c++)
+                    for (size_t c=0; c<channels; c++)
                     {
                         outfile << (short)data[y][x][c];
                         outfile << "  ";
@@ -352,7 +368,7 @@ namespace pgm {
             outfile.close();
             struct stat s;
             if (stat(path.c_str(), &s) == -1)
-                throw std::runtime_error(std::strerror(errno));
+                throw std::runtime_error("error parsing string");
             std::cout << "Wrote " << s.st_size << " bytes to " << path << std::endl;
             return s.st_size;
         }

@@ -18,7 +18,7 @@ namespace algos {
         float vscale = (h - 1) / (float)height;
         float hscale = (w - 1) / (float)width;
 
-        size_t x, y;
+        int x = 0;
         image::BitMap img_out;
 
         for (int y=0; y<height; y++)
@@ -29,7 +29,7 @@ namespace algos {
                 y++;
             }
             std::vector<image::Pixel> row;
-            for (int x=0; x<width; x++)
+            for (x=0; x<width; x++)
             {
                 float gx = x * hscale;
                 float gy = y * vscale;
@@ -54,7 +54,7 @@ namespace algos {
         float vscale = (h - 1) / (float)height;
         float hscale = (w - 1) / (float)width;
 
-        size_t x, y;
+        int x = 0;
         image::BitMap img_out;
 
         for (int y=0; y<width; y++)
@@ -65,7 +65,7 @@ namespace algos {
                 y++;
             }
             std::vector<image::Pixel> row;
-            for (int x=0; x<height; x++)
+            for (x=0; x<height; x++)
             {
                 float gx = x * hscale;
                 float gy = y * vscale;
@@ -110,7 +110,7 @@ namespace algos {
         float vscale = (h - 1) / (float)height;
         float hscale = (w - 1) / (float)width;
 
-        size_t x, y;
+        int x = 0;
         image::BitMap img_out;
 
         for (int y=0; y<height; y++)
@@ -121,7 +121,7 @@ namespace algos {
                 y++;
             }
             std::vector<image::Pixel> row;
-            for (int x=0; x<width; x++)
+            for (x=0; x<width; x++)
             {
                 float gx = x * hscale;
                 float gy = y * vscale;

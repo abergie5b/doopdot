@@ -71,10 +71,10 @@ namespace algos {
             cumulative_distribution[it.first] = (float)cumsum / (float)total_pixels;
         }
         image::BitMap data_out;
-        for (int y=0; y<height; y++)
+        for (size_t y=0; y<height; y++)
         {
             std::vector<image::Pixel> row;
-            for (int x=0; x<width; x++)
+            for (size_t x=0; x<width; x++)
             {
                 uint8_t pixel = data[y][x];
                 uint8_t cdf = 255 * cumulative_distribution[pixel];
@@ -118,7 +118,7 @@ namespace algos {
         std::cout << "Histogram of " << title;
         std::cout << std::endl;
 
-        for (int y=max_count; y>0; y--)
+        for (size_t y=max_count; y>0; y--)
         {
             if (std::find(values.begin(), values.end(), y) != values.end())
             {
@@ -127,7 +127,7 @@ namespace algos {
                     std::cout << yaxis_title;
                 else
                 {
-                    for (int i=0; i<yaxis_title_length; i++)
+                    for (size_t i=0; i<yaxis_title_length; i++)
                     {
                         std::cout << ' ';
                     }
@@ -137,7 +137,7 @@ namespace algos {
                 yaxis_length++;
                 size_t y_length = std::to_string(y).size();
                 std::cout << "|" << y;
-                for (int i=0; i<ylabel_length-y_length; i++)
+                for (size_t i=0; i<ylabel_length-y_length; i++)
                     std::cout << " ";
                 std::cout << "|";
 
@@ -147,12 +147,12 @@ namespace algos {
                     std::cout << ' ';
                     if (it->second >= y)
                     {
-                        for (int i=0; i<xlabel_length-1; i++)
+                        for (size_t i=0; i<xlabel_length-1; i++)
                             std::cout << '_';
                     }
                     else
                     {
-                        for (int i=0; i<xlabel_length-1; i++)
+                        for (size_t i=0; i<xlabel_length-1; i++)
                             std::cout << ' ';
                     }
                     // TODO
@@ -165,17 +165,17 @@ namespace algos {
         }
 
         // X-Axis
-        for (int i=0; i<yaxis_title_length; i++)
+        for (size_t i=0; i<yaxis_title_length; i++)
             std::cout << " ";
         std::cout << "|";
-        for (int i=0; i<ylabel_length; i++)
+        for (size_t i=0; i<ylabel_length; i++)
             std::cout << "=";
         std::cout << "|";
 
         for (auto const& it : hist)
         {
             unsigned int x_length = it.first.size();
-            for (int i=0; i<xlabel_length-x_length; i++)
+            for (size_t i=0; i<xlabel_length-x_length; i++)
                 std::cout << ' '; 
             std::cout << it.first;
             std::cout << "|";

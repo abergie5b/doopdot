@@ -87,11 +87,12 @@ struct args parse_args(int argc, char* argv[])
         {
             if (arg == "resize") // requires method, width, and height
             {
+                char* context = nullptr;
                 arguments.resize = true;
                 arguments.resize_method = argv[x+1]; // seg fault
-                std::string token = strtok(const_cast<char*>(argv[x+2]), " "); // seg fault
+                std::string token = strtok_s(const_cast<char*>(argv[x+2]), " ", &context); // seg fault
                 arguments.height = std::stoi(token, NULL, 10);
-                token = strtok(const_cast<char*>(argv[x+3]), " "); // seg fault
+                token = strtok_s(const_cast<char*>(argv[x+3]), " ", &context); // seg fault
                 arguments.width = std::stoi(token, NULL, 10);
             }
 
@@ -138,7 +139,17 @@ int write_image(image::Image img, std::string path, std::string format)
 
 int main(int argc, char* argv[])
 {
-    struct args arguments = parse_args(argc, argv);
+    //struct args arguments = parse_args(argc, argv);
+    //image::Image img(arguments.filename, arguments.filetype);
+
+    struct args arguments;
+    arguments.filetype = "pgm";
+    arguments.filename = "C:\\Users\\Andrew\\Source\\doopdot\\data\\baboon.ascii.pgm";
+
+    arguments.convolve = true;
+    arguments.write = true;
+    arguments.write_path = "C:\\Users\\Andrew\\Source\\doopdot\\data\\output-baboon.ascii.pgm";
+
     image::Image img(arguments.filename, arguments.filetype);
 
     if (arguments.resize)

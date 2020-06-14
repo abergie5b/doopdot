@@ -1,11 +1,11 @@
-#include "algorithms/resize.h"
-#include "algorithms/transform.h"
-#include "algorithms/convolution.h"
-#include "algorithms/histogram.h"
-#include "algorithms/filter.h"
-#include "common/image.h"
-#include "common/types.h"
-#include "formats/pgm.h"
+#include "algorithms/include/resize.h"
+#include "algorithms/include/transform.h"
+#include "algorithms/include/convolution.h"
+#include "algorithms/include/histogram.h"
+#include "algorithms/include/filter.h"
+#include "common/include/image.h"
+#include "common/include/types.h"
+#include "common/include/pgm.h"
 
 #include <iostream>
 
@@ -43,9 +43,10 @@ void test_image(int argc, char* argv[])
 
     if (action == "resize")
     {
-        std::string token = strtok(const_cast<char*>(argv[3]), " ");
+        char* context = nullptr;
+        std::string token = strtok_s(const_cast<char*>(argv[3]), " ", &context);
         int height = std::stoi(token, NULL, 10);
-        token = strtok(const_cast<char*>(argv[4]), " ");
+        token = strtok_s(const_cast<char*>(argv[4]), " ", &context);
         int width = std::stoi(token, NULL, 10);
 
         img.resize(height, width, argv[4]);
@@ -60,7 +61,8 @@ void test_image(int argc, char* argv[])
 
     else if (action == "histogram")
     {
-        std::string token = strtok(const_cast<char*>(argv[3]), " ");
+        char* context = nullptr;
+        std::string token = strtok_s(const_cast<char*>(argv[3]), " ", &context);
         int magnitude = std::stoi(token, NULL, 10);
 
         std::map<image::Pixel, unsigned int> pix_hist = algos::get_histogram(img.data);

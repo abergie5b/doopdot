@@ -1,6 +1,7 @@
 #include "include/jpeg.h"
 
 #include <jpeglib.h>
+
 #include <numeric>
 
 #include <cstring>
