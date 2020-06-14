@@ -1,8 +1,10 @@
 *tags*
-*doopdot*
 *.swp
 *.swo
 
+.vs
+Debug
+Release
 bin
 data
 build
