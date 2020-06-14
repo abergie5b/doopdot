@@ -2,6 +2,8 @@
 *doopdot*
 *.swp
 *.swo
+*.stash
+*.o
 
 bin
 data
